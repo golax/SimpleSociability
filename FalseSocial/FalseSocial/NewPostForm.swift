@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewPostForm: View {
     
-    typealias CreateAction = (Post) -> Void
+    typealias CreateAction = (Post) async throws -> Void
     let createAction: CreateAction
     
     @State private var post = Post(title: "", content: "", authorName: "") /// initiates title, content, and author's name as local variables, every time a new post is created (@State)
@@ -38,12 +38,17 @@ struct NewPostForm: View {
         }
     }
     private func createPost() { /// create the post, then dismiss the current view
-        createAction(post)
-        dismiss()
+        Task { /// a safekeep that terminates the async process if an error occurs while creating the post (usually while connecting to the Firebase database)
+            do {
+                try await createAction(post)
+                dismiss()
+            }
+            catch {
+                print("Can't create post: \(error)")
+            }
+        }
     }
 }
-
-
 
 struct NewPostForm_Previews: PreviewProvider {
     static var previews: some View {
