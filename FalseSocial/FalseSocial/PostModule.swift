@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post: Identifiable {
+struct Post: Identifiable, Codable {
     var title: String
     var content: String
     var authorName: String
@@ -23,5 +23,3 @@ struct Post: Identifiable {
 }
 
 extension Post { static let testPost = Post(title: "Hello, this is a test", content: "Hello, world!", authorName: "You") } /// a test post that is used as a placeholder
-
-
