@@ -25,6 +25,7 @@ struct PostsList: View {
             }
             .sheet(isPresented: $showNewPostForm){ NewPostForm(createAction: viewModel.makeCreateAction())
             } /// once the button is pressed, the formsheet will appear
+            .onAppear{ viewModel.fetchPosts() } /// loads all posts found in the database, instead of local data
     }
 }
 
