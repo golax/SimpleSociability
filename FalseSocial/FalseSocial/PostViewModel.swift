@@ -9,11 +9,17 @@ import Foundation
 
 @MainActor
 class PostsViewModel: ObservableObject {
-    @Published var posts = [Post.testPost]
+    @Published var posts = [Post]() /// only uploaded posts
     
     func makeCreateAction() -> NewPostForm.CreateAction { return { [weak self] post in
         try await PostsRepository.create(post)
         self?.posts.insert(post, at: 0)
         }
-    } /// also adds the post to the Firebase
+    } /// adds the post to Firebase
+    func fetchPosts() { /// attempt to fetch posts at startup (PostsRepository.swift)
+        Task {
+            do { posts = try await PostsRepository.fetchPosts() }
+            catch { print("Can't fetch posts: \(error)") }
+        }
+    }
 }
